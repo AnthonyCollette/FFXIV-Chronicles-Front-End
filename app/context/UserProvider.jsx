@@ -54,6 +54,10 @@ export function UserProvider({ children, initialData = null }) {
     deleteToken();
   };
 
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
   return (
     <UserContext.Provider value={{ user, loading, refreshUser, logout }}>
       {children}

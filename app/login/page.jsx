@@ -18,7 +18,7 @@ export default function Login() {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { user, loading } = useUser();
+  const { user, loading, refreshUser } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -28,7 +28,7 @@ export default function Login() {
       console.log(res.error)
       return
     }
-    router.push("/")
+    refreshUser()
   };
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export default function Login() {
       router.push("/")
     }
   }, [loading])
+
 
   return (
     <div className="flex justify-center items-center min-h-screen">
