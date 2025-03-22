@@ -8,8 +8,9 @@ import kweh from "../assets/images/kweh.png";
 import { motion } from "framer-motion";
 import { buttonStyles } from "../assets/styles/classes";
 import { useEffect, useState } from "react";
-import { isAuth, login } from "../lib/actions/auth-actions";
+import { login } from "../lib/actions/auth-actions";
 import { useRouter } from "next/navigation";
+import { useUser } from "../context/UserProvider";
 
 export default function Login() {
   const inputStyle =
@@ -17,16 +18,24 @@ export default function Login() {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { user, loading } = useUser();
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target);
+    const res = await login(formData);
+    if (res.error) {
+      console.log(res.error)
+      return
+    }
+    router.push("/")
+  };
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const res = await isAuth()
-      if (res) {
-        router.push("/")
-      }
+    if (!loading && user) {
+      router.push("/")
     }
-    checkAuth()
-  }, [])
+  }, [loading])
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -47,7 +56,7 @@ export default function Login() {
         <h1 className="uppercase text-yellow font-[family-name:var(--font-jupiter)] text-[30px] text-center mb-[40px]">
           Connexion
         </h1>
-        <form action={login}>
+        <form onSubmit={handleLogin}>
           <div className="relative mb-[15px]">
             <input
               type="email"

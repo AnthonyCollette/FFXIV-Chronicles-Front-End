@@ -1,29 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
-import { isAuth, logout } from "./lib/actions/auth-actions";
+import Link from "next/link";
+import { useUser } from "./context/UserProvider";
 
 export default function Home() {
-  const [auth, setAuth] = useState(false);
-  const handleLogout = async () => {
-    try {
-      const deleteToken = await logout()
-    } catch (error) {
-      console.log("Vous n'êtes pas connecté");
-    }
-  };
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const res = await isAuth()
-      setAuth(res)
-    }
-    checkAuth()
-  }, [])
+  const { user, logout } = useUser();
 
   return (
     <div>
-      {auth && <button onClick={handleLogout}>Se déconnecter</button>}
+      {user && (
+        <>
+          <h1>Bonjour {user?.username}</h1>
+          <p>
+            Voici votre id : {user?.id} ainsi que votre adresse e-mail :{" "}
+            {user?.email}
+          </p>{" "}
+          <button onClick={logout}>Se déconnecter</button>
+        </>
+      )}
+      {!user && <Link href="/login">Se connecter</Link>}
     </div>
   );
 }

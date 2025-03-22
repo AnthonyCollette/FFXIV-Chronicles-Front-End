@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 import "./assets/styles/style.css";
-import CheckAuth from "./components/CheckAuth";
+import { UserProvider } from "./context/UserProvider";
 
 const roboto = localFont({
   src: "./fonts/Roboto/Roboto-Regular.ttf",
@@ -55,9 +55,13 @@ export default function RootLayout({ children }) {
       }
       suppressHydrationWarning
     >
-      <body className="font-[family-name:var(--font-roboto)] text-black text-md bg-black" suppressHydrationWarning >
-          <CheckAuth />
-        <div className="container">{children}</div>
+      <body
+        className="font-[family-name:var(--font-roboto)] text-black text-md bg-black"
+        suppressHydrationWarning
+      >
+        <UserProvider>
+          <div className="container">{children}</div>
+        </UserProvider>
       </body>
     </html>
   );
