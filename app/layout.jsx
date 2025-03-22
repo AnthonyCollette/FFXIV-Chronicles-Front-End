@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./assets/styles/style.css";
+import CheckAuth from "./components/CheckAuth";
 
 const roboto = localFont({
   src: "./fonts/Roboto/Roboto-Regular.ttf",
@@ -37,22 +38,26 @@ export const metadata = {
   description: "The fastest way to build apps with Next.js and Supabase",
 };
 
-export default function RootLayout({
-  children
-}) {
-
-  // checkAuth()
-
+export default function RootLayout({ children }) {
   return (
     <html
       lang="fr"
-      className={roboto.variable + " " + robotoLight.variable + " " + robotoBold.variable + " " + jupiter.variable + " " + jupiterBold.variable}
+      className={
+        roboto.variable +
+        " " +
+        robotoLight.variable +
+        " " +
+        robotoBold.variable +
+        " " +
+        jupiter.variable +
+        " " +
+        jupiterBold.variable
+      }
       suppressHydrationWarning
     >
-      <body className="font-[family-name:var(--font-roboto)] text-black text-md bg-black">
-          <div className="container">
-            {children}
-          </div>
+      <body className="font-[family-name:var(--font-roboto)] text-black text-md bg-black" suppressHydrationWarning >
+          <CheckAuth />
+        <div className="container">{children}</div>
       </body>
     </html>
   );

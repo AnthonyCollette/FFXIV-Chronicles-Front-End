@@ -1,20 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import mailIcon from "../../assets/images/envelope-solid.svg";
-import cadenas from "../../assets/images/cadenas.svg";
-import chocobo from "../../assets/images/chocobo-login.png";
-import kweh from "../../assets/images/kweh.png";
+import mailIcon from "../assets/images/envelope-solid.svg";
+import cadenas from "../assets/images/cadenas.svg";
+import chocobo from "../assets/images/chocobo-login.png";
+import kweh from "../assets/images/kweh.png";
 import { motion } from "framer-motion";
-import { buttonStyles } from "../../assets/styles/classes";
-import { useState } from "react";
-import { login } from "../../lib/actions/auth-actions";
+import { buttonStyles } from "../assets/styles/classes";
+import { useEffect, useState } from "react";
+import { isAuth, login } from "../lib/actions/auth-actions";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const inputStyle =
     "border-2 border-yellow-2 rounded-xl bg-brown-2/50 pl-[50px] py-4 pr-[15px] text-white text-[18px] w-full leading-none";
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const res = await isAuth()
+      if (res) {
+        router.push("/")
+      }
+    }
+    checkAuth()
+  }, [])
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -24,7 +36,6 @@ export default function Login() {
           animate={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.5, type: "spring" }}
           className="absolute bottom-[calc(100%+100px)] left-1/4"
-          
         >
           <Image src={kweh} alt="Kweh" />
         </motion.div>
@@ -74,7 +85,10 @@ export default function Login() {
               Mot de passe oublié ?
             </button>
           </div>
-          <button type="submit" className={buttonStyles.default + " mx-auto block mt-[30px]"}>
+          <button
+            type="submit"
+            className={buttonStyles.default + " mx-auto block mt-[30px]"}
+          >
             Se connecter
           </button>
         </form>

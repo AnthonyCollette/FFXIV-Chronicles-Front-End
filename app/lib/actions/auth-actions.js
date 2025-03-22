@@ -16,7 +16,7 @@ export async function login(formData) {
       email: email,
       password: password,
     }),
-    credentials: "include"
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -25,34 +25,29 @@ export async function login(formData) {
     return { error: "Erreur lors de la requête" };
   }
   const data = await response.json();
-
-  cookies().set("token", data.token, {
-    httpOnly: true,
-  })
-  console.log(cookies().get("token"))
-
-  console.log(data)
-//   cookies.set("token", data.token)
-//   console.log(cookies.get("token"))
-
-  
+  const cookiesStore = await cookies();
+  cookiesStore.set("token", data.token);
 }
 
-export async function checkAuth() {
-  const response = await fetch(`${baseUrl}/api/check-auth`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    console.error("Erreur lors de la requête :", response.status);
-    return { error: "Erreur lors de la requête" };
+export async function logout() {
+  try {
+    const cookiesStore = await cookies();
+    return cookiesStore.delete("token");
+  } catch (error) {
+    return console.log("Vous n'êtes pas connecté");
   }
+}
 
-  const data = await response.json();
+export async function isAuth() {
+  try {
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get("token");
 
-  return data;
+    if (!token) {
+      return false;
+    }
+    return true
+  } catch (error) {
+    return false
+  }
 }
